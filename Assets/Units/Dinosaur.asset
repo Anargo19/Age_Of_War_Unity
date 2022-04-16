@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2550de0fb34a17e4088740c4bc3e2655, type: 3}
+  m_Name: Dinosaur
+  m_EditorClassIdentifier: 
+  health: 55
+  sprites:
+  - {fileID: 21300000, guid: 09c07f6aef44b95459b66e0820dcb5b5, type: 3}
+  damage: 10
+  experience: 150
+  moneyOut: 125
+  price: 100
+  critChance: 5
+  ranged: 0
+  range: 0
