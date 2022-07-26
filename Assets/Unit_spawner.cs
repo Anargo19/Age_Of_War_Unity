@@ -46,7 +46,7 @@ public class Unit_spawner : MonoBehaviour
         GameObject unit = Instantiate(units[id], this.transform);
         Transform transform = unit.transform;
 
-        transform.localScale = new Vector3(unit.transform.localScale.x * -1, unit.transform.localScale.y, unit.transform.localScale.z);
+        //transform.localScale = new Vector3(unit.transform.localScale.x * -1, unit.transform.localScale.y, unit.transform.localScale.z);
        // transform.position = new Vector3(transform.position.x, transform.position.y + unit.transform.localScale.y / 2, transform.position.z);
         if (isEnemy)
         {

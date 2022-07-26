@@ -18,11 +18,12 @@ public class Unit_Controller : MonoBehaviour
     Vector3 forward;
     Vector3 anchor;
     Game_Manager manager;
+    GameObject ownCollider;
 
 
     [SerializeField] GameObject DyingCanvas;
 
-   [SerializeField] GameObject enemy;
+   [SerializeField] Transform enemy;
     GameObject rangedEnemy;
 
     [SerializeField] int health = 1;
@@ -30,6 +31,7 @@ public class Unit_Controller : MonoBehaviour
     void Start()
     {
         collider = spriteObject.GetComponent<BoxCollider2D>();
+        ownCollider = collider.gameObject;
         health = unit.health;
         manager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<Game_Manager>();
         sprite = spriteObject.GetComponent<SpriteRenderer>();
@@ -110,13 +112,13 @@ public class Unit_Controller : MonoBehaviour
         if (!player1)
         {
             forward = Vector2.left;
-            anchor = transform.position - new Vector3(collider.size.x / 2 + 0.02f, 0, 0);   
+            anchor = transform.position - new Vector3(collider.size.x / 2 + 0.02f, -collider.size.y/2, 0);   
 
         }
         else
         {
             forward = Vector2.right;
-            anchor = transform.position + new Vector3(collider.size.x / 2 + 0.02f, 0, 0);
+            anchor = transform.position + new Vector3(collider.size.x / 2 + 0.02f, collider.size.y / 2, 0);
         }
     }
 
@@ -130,6 +132,11 @@ public class Unit_Controller : MonoBehaviour
         Debug.Log(health + " + " +  unit.health + " = " + (float)health / unit.health);
         if(health <= 0)
         {
+            StopAllCoroutines();
+            for(int t = 11; t > 0; t--)
+            {
+                spriteObject.GetComponent<SpriteRenderer>().material.SetFloat("_StepSlider", (t / 11) * 1.15f);
+            }
             if (!player1)
             {
                 manager.AddMoney(unit.moneyOut);
@@ -138,16 +145,15 @@ public class Unit_Controller : MonoBehaviour
                 dying.transform.position = transform.position;
                 dying.GetComponent<DyingCanvas>().textmesh.text = "+ " + unit.moneyOut;
             }
-            Destroy(gameObject);
+            Destroy(enemy.parent.gameObject);
             
         }
     }
 
     public void MeleeBehavior()
     {
-        if (!unitsInFront && !noMove)
+        if (!unitsInFront)
         {
-
             transform.Translate(forward * Time.deltaTime * 0.7f);
 
 
@@ -156,10 +162,11 @@ public class Unit_Controller : MonoBehaviour
                 Debug.DrawRay(anchor, new Vector3(forward.x * 0.1f, 0, 0) , Color.red);
             if (raycastHit2D)
             {
-                if (raycastHit2D.collider.gameObject != gameObject)
+                if (raycastHit2D.collider.gameObject != ownCollider)
                 {
                     unitsInFront = true;
-                    enemy = raycastHit2D.collider.gameObject;
+                    enemy = raycastHit2D.collider.transform.parent;
+                    Debug.Log(enemy.name);
                     if (enemy.GetComponent<Unit_Controller>().player1 != player1)
                     {
                         StartCoroutine(MeleeAttack());
@@ -218,7 +225,7 @@ public class Unit_Controller : MonoBehaviour
                 if (raycastHit2D.collider.gameObject != gameObject)
                 {
                     unitsInFront = true;
-                    enemy = raycastHit2D.collider.gameObject;
+                    enemy = raycastHit2D.collider.transform.parent;
                     if (enemy.GetComponent<Unit_Controller>().player1 != player1)
                     {
                         enemyInFront = true;
